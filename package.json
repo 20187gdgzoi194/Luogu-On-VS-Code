@@ -1,0 +1,88 @@
+{
+	"name": "luogu",
+	"displayName": "Luogu on VS Code",
+	"description": "An extension for Luogu on VS Code.",
+	"version": "1.0.0",
+	"publisher": "chuangzhi",
+	"engines": {
+		"vscode": "^1.42.0"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://gitee.com/chuangzhi-programming-studio/LVSC"
+	},
+	"icon": "https://i.loli.net/2020/03/01/yW4Urk6NSQDoKFd.png",
+	"homepage": "https://gitee.com/chuangzhi-programming-studio/LVSC",
+	"license": "MIT",
+	"bugs": {
+		"url": "https://gitee.com/chuangzhi-programming-studio/LVSC",
+		"email": "chuangzhi080317@gmail.com"
+	},
+	"categories": [
+		"Other",
+		"Snippets"
+	],
+	"keywords": [
+		"luogu",
+		"LVSC",
+		"chuangzhi",
+		"algorithm",
+		"OI",
+		"洛谷",
+		"OJ",
+		"OnlineJudge"
+	],
+	"activationEvents": [
+		"onCommand:extension.About",
+		"onCommand:extension.WatchProblem"
+	],
+	"main": "./extension.js",
+	"contributes": {
+		"commands": [
+			{
+				"command": "extension.About",
+				"title": "Luogu: About"
+			},
+			{
+				"command": "extension.WatchProblem",
+				"title": "Luogu: Watch Problem"
+			}
+		],
+		"keybindings": [
+			{
+				"command": "extension.About",
+				"key": "Alt+A",
+				"mac": "cmd+A"
+			},
+			{
+				"command": "extension.WatchProblem",
+				"key": "Alt+W",
+				"mac": "cmd+W"
+			}
+		]
+	},
+	"scripts": {
+		"lint": "eslint .",
+		"pretest": "npm run lint",
+		"test": "node ./test/runTest.js"
+	},
+	"devDependencies": {
+		"@types/glob": "^7.1.1",
+		"@types/mocha": "^7.0.1",
+		"@types/node": "^12.11.7",
+		"@types/vscode": "^1.42.0",
+		"eslint": "^6.8.0",
+		"glob": "^7.1.6",
+		"mocha": "^7.0.1",
+		"typescript": "^3.7.5",
+		"vscode-test": "^1.3.0"
+	},
+	"dependencies": {
+		"@luogu-dev/markdown-it-katex": "0.0.1",
+		"axios": "^0.19.2",
+		"axios-cookiejar-support": "^0.5.1",
+		"markdown-it": "^10.0.0",
+		"markdown-it-latex": "^0.2.0",
+		"tough-cookie": "^3.0.1"
+	}
+}
