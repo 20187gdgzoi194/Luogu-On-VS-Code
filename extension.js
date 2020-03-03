@@ -3,7 +3,10 @@ const HTTPSupport = require('axios');
 const Cookies = require('tough-cookie');
 const MarkdownIt = require('markdown-it');
 const MarkdownItKatex = require('@luogu-dev/markdown-it-katex');
+const cookiessupport = require('axios-cookiejar-support').default;
+const CSRF_TOKEN_REGEX = /<meta name="csrf-token" content="(.*)">/
 const md=MarkdownIt();
+var base64='';
 md.use(MarkdownItKatex);//Markdown-it-Latex无法使用
 function jsonarraylength(jsonarray) {
 	var jsonlen=0;
@@ -27,7 +30,7 @@ function MakeSample(array,length){
 	var str='';
 	for(var i=0;i<length;i++){
 		str+=`
-		<h5>Sample #${String(i+1)}</h5>
+		<h3>Sample #${String(i+1)}</h3>
 		<b>Input:</b>
 		<p>${array[i][0]}</p>
 		<b>Output:</b>
@@ -38,13 +41,44 @@ function MakeSample(array,length){
 	console.log(str);
 	return str;
 }
-const jar=new Cookies.CookieJar();
-const APILOAD = HTTPSupport.default.create({
-	"baseURL": 'https://www.luogu.com.cn/',
-	"timeout": 10000,
-	"withCredentials": true,
-	jar
-})
+const cookiejar=new Cookies.CookieJar();
+
+function apireturn() {
+	const axios = HTTPSupport.default.create({
+		baseURL: 'https://www.luogu.com.cn',
+		withCredentials: true,
+		cookiejar
+	  })
+	  const defaults = axios.defaults;
+	  if (!defaults.transformRequest) {
+		defaults.transformRequest = []
+	  } else if (!(defaults.transformRequest instanceof Array)) {
+		defaults.transformRequest = [ defaults.transformRequest ];
+	  }
+	  defaults.transformRequest.push((data, headers) => {
+		headers['User-Agent'] = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.130 Safari/537.36 LVSC/1.1.0';
+		return data
+	  })
+	
+	return cookiessupport(axios);
+}
+const APILOAD=apireturn();
+async function GetCaptcha(){
+	const data=await APILOAD.get('api/verify/captcha',{
+		params: {
+		  '_t': new Date().getTime()
+		},
+		responseType: 'arraybuffer',
+		jar: cookiejar
+	}).then(
+		function returndata(MSG) {
+			return MSG;
+		}
+	);
+	console.log('data:image/png;base64,'+data.data.toString("base64"));
+	base64=data.data.toString("base64");
+	console.log(base64);
+}
 /**
  * @param {vscode.ExtensionContext} context
  */
@@ -77,13 +111,12 @@ function activate(context) {
 		if(json.data.status==200){
 			vscode.window.showInformationMessage('Get Problem Successfully!');
 			const TagsArrayLength=jsonarraylength(json.data.data.Tags);
-			const Tags=MakeTag(json.data.data.Tags,TagsArrayLength);
+			const Tags=MakeTag(json.data.data.Tags,TagsArrayLength);//生成标签
 			console.log(Tags);
-			//生成HTML文件展示
 			console.log(jsonarraylength(json.data.data.Sample));
 			var BG='',miaoshu='';
-			const sample=MakeSample(json.data.data.Sample,jsonarraylength(json.data.data.Sample));
-			if(!json.data.data.Background){
+			const sample=MakeSample(json.data.data.Sample,jsonarraylength(json.data.data.Sample));//生成样例
+			if(!json.data.data.Background){ //获取题目背景
 				BG='无题目背景';
 			}
 			else{
@@ -91,12 +124,12 @@ function activate(context) {
 			}
 			console.log(BG);
 			if(!json.data.data.Description){
-				miaoshu='无题目描述';
+				miaoshu='无题目描述';//获取题目描述
 			}
 			else{
 				miaoshu=json.data.data.Description;
 			}
-			var Hint='';
+			var Hint='';//获取题目提示
 			if(!json.data.data.Hint){
 				Hint='无题目提示';
 			}
@@ -135,17 +168,104 @@ function activate(context) {
 				</body>	
 			</html>	
 			`
-			console.log(HTML);
+			console.log(HTML);//生成展示的HTML文档
 			const panel=vscode.window.createWebviewPanel(json.data.data.StringPID+':'+json.data.data.Name,
 			json.data.data.StringPID+':'+json.data.data.Name,vscode.ViewColumn.Two,{
 				enableScripts: true,
 				retainContextWhenHidden: true
 			})
-			panel.webview.html=HTML;
+			panel.webview.html=HTML;//展示
 		}
 		else{
 			vscode.window.showErrorMessage('Get Problem Failed, Error Code:'+String(json.data.status)+" Reason:"+json.data.data);
 			//JSON错误，可能无权看题、没有这道题等等
+		}
+	});
+	context.subscriptions.push(disposable);
+	disposable = vscode.commands.registerCommand('extension.Login', async function () {
+		const username=await vscode.window.showInputBox({
+			ignoreFocusOut: true,
+			placeHolder: 'Input your Username, Phone Number or Email'
+		}).then(
+			function returnusername(MSG) {
+				return MSG;
+			}
+		);//输入用户名（也可以是手机号、邮箱）
+		if(!username)return;
+		const password=await vscode.window.showInputBox({
+			ignoreFocusOut: true,
+			placeHolder: 'Input your Password',
+			password: true
+		}).then(
+			function returnusername(MSG) {
+				return MSG;
+			}
+		);//读取密码
+		if(!password)return;
+		await GetCaptcha();//获得验证码图片
+		console.log(base64);
+		const HTML=`
+			<!DOCTYPE HTML>
+			<html lang="en">
+				<head>
+					<meta charset="UTF-8">
+					<title>Luogu Captcha</title>
+				</head>
+				<body>
+					<div align="center">
+						<img src="https://cdn.luogu.com.cn/fe/logo.png" height="81" width="160" />
+					</div>
+					<div align="center">
+						<h2><font color=#6495ED>在洛谷，享受 Coding 的欢乐！</font></h2>
+					</div>
+					<div align="center">
+						<img id="cap" src="data:image/png;base64,${base64}">
+					</div>
+					<div align="center">
+						<font color=#6495ED><h4>请在上方输入框内输入验证码</h4></font>
+					</div>				
+				</body>
+			</html>	
+		`
+		const panel=vscode.window.createWebviewPanel('Luogu Captcha','Luogu Captcha',
+		vscode.ViewColumn.One,{
+			enableScripts: true,
+			retainContextWhenHidden: true,
+			preserveFocus: true
+		});
+		panel.webview.html=HTML;
+		const captcha=await vscode.window.showInputBox({
+			ignoreFocusOut: true,
+			placeHolder: 'Enter Verification Code'
+		}).then(
+			function returnusername(MSG) {
+				return MSG;
+			}
+		);
+		const token=await APILOAD.get('',{jar: cookiejar}).then(
+			function getheader(MSG){
+				const returndata=CSRF_TOKEN_REGEX.exec(MSG.data);
+				return returndata ? returndata[1].trim() : null
+			}
+		);
+		console.log(cookiejar);
+		console.log(token);
+		const loginreturn=await APILOAD.post('/api/auth/userPassLogin',{
+			username,password,captcha
+		},{
+			headers:{
+				'X-CSRF-Token': token,
+				'Referer': 'https://www.luogu.com.cn/auth/login',
+			},
+			jar: cookiejar
+		}).then(
+			function returnMSG(MSG){
+				return MSG;
+			}
+		);
+		console.log(loginreturn);
+		if(loginreturn){
+			vscode.window.showInformationMessage('Login Successfully!');
 		}
 	});
 	context.subscriptions.push(disposable);

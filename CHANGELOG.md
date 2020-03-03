@@ -1,9 +1,7 @@
 # Change Log
 
-All notable changes to the "luogu" extension will be documented in this file.
+Version 1.0.0
+可以查看题目
 
-Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
-
-## [Unreleased]
-
-- Initial release
+Version 1.1.2
+支持登录

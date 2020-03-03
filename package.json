@@ -2,7 +2,7 @@
 	"name": "luogu",
 	"displayName": "Luogu on VS Code",
 	"description": "An extension for Luogu on VS Code.",
-	"version": "1.0.0",
+	"version": "1.1.0",
 	"publisher": "chuangzhi",
 	"engines": {
 		"vscode": "^1.42.0"
@@ -11,11 +11,11 @@
 		"type": "git",
 		"url": "https://gitee.com/chuangzhi-programming-studio/LVSC"
 	},
-	"icon": "https://i.loli.net/2020/03/01/yW4Urk6NSQDoKFd.png",
+	"icon": "luogu-normal.png",
 	"homepage": "https://gitee.com/chuangzhi-programming-studio/LVSC",
 	"license": "MIT",
 	"bugs": {
-		"url": "https://gitee.com/chuangzhi-programming-studio/LVSC",
+		"url": "https://gitee.com/chuangzhi-programming-studio/LVSC/issues",
 		"email": "chuangzhi080317@gmail.com"
 	},
 	"categories": [
@@ -34,7 +34,8 @@
 	],
 	"activationEvents": [
 		"onCommand:extension.About",
-		"onCommand:extension.WatchProblem"
+		"onCommand:extension.WatchProblem",
+		"onCommand:extension.Login"
 	],
 	"main": "./extension.js",
 	"contributes": {
@@ -46,6 +47,10 @@
 			{
 				"command": "extension.WatchProblem",
 				"title": "Luogu: Watch Problem"
+			},
+			{
+				"command": "extension.Login",
+				"title": "Luogu: Login"
 			}
 		],
 		"keybindings": [
@@ -58,6 +63,11 @@
 				"command": "extension.WatchProblem",
 				"key": "Alt+W",
 				"mac": "cmd+W"
+			},
+			{
+				"command": "extension.Login",
+				"key": "Alt+L",
+				"mac": "cmd+L"
 			}
 		]
 	},
@@ -81,6 +91,7 @@
 		"@luogu-dev/markdown-it-katex": "0.0.1",
 		"axios": "^0.19.2",
 		"axios-cookiejar-support": "^0.5.1",
+		"base64-img": "^1.0.4",
 		"markdown-it": "^10.0.0",
 		"markdown-it-latex": "^0.2.0",
 		"tough-cookie": "^3.0.1"
