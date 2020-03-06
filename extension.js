@@ -44,22 +44,21 @@ function MakeSample(array,length){
 const cookiejar=new Cookies.CookieJar();
 
 function apireturn() {
-	const axios = HTTPSupport.default.create({
+	const axios=HTTPSupport.default.create({
 		baseURL: 'https://www.luogu.com.cn',
 		withCredentials: true,
 		cookiejar
 	  })
-	  const defaults = axios.defaults;
-	  if (!defaults.transformRequest) {
-		defaults.transformRequest = []
-	  } else if (!(defaults.transformRequest instanceof Array)) {
-		defaults.transformRequest = [ defaults.transformRequest ];
-	  }
-	  defaults.transformRequest.push((data, headers) => {
-		headers['User-Agent'] = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.130 Safari/537.36 LVSC/1.1.0';
-		return data
-	  })
-	
+	const defaults=axios.defaults;
+	if(!defaults.transformRequest){
+		defaults.transformRequest = [];
+	}else if(!(defaults.transformRequest instanceof Array)){
+		defaults.transformRequest=[defaults.transformRequest];
+	}
+	defaults.transformRequest.push((data,headers)=>{
+		headers['User-Agent']='Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.130 Safari/537.36 LVSC/1.1.2';
+		return data;
+	});
 	return cookiessupport(axios);
 }
 const APILOAD=apireturn();
@@ -79,6 +78,7 @@ async function GetCaptcha(){
 	base64=data.data.toString("base64");
 	console.log(base64);
 }
+var token='';
 /**
  * @param {vscode.ExtensionContext} context
  */
@@ -242,7 +242,7 @@ function activate(context) {
 				return MSG;
 			}
 		);
-		const token=await APILOAD.get('',{jar: cookiejar}).then(
+		token=await APILOAD.get('',{jar: cookiejar}).then(
 			function getheader(MSG){
 				const returndata=CSRF_TOKEN_REGEX.exec(MSG.data);
 				return returndata ? returndata[1].trim() : null
@@ -266,6 +266,34 @@ function activate(context) {
 		console.log(loginreturn);
 		if(loginreturn){
 			vscode.window.showInformationMessage('Login Successfully!');
+		}
+	});
+	context.subscriptions.push(disposable);
+	disposable = vscode.commands.registerCommand('extension.Fate',async function () {
+		token=await APILOAD.get('',{jar: cookiejar}).then(
+			function getheader(MSG){
+				const returndata=CSRF_TOKEN_REGEX.exec(MSG.data);
+				return returndata ? returndata[1].trim() : null
+			}
+		);
+		const json=await APILOAD.post('/index/ajax_punch',{},{
+			headers:{
+				'X-CSRF-Token': token,
+				'Referer': 'https://www.luogu.com.cn/'
+			},
+			jar: cookiejar
+		}).then(
+			function returnMSG(MSG){
+				return MSG;
+			}
+		);
+		console.log(json.data);
+		if(json.data.code!=200){
+			vscode.window.showInformationMessage(json.data.message);
+			return;
+		}
+		else{
+			vscode.window.showInformationMessage('Get Fate Successfully!');
 		}
 	});
 	context.subscriptions.push(disposable);
