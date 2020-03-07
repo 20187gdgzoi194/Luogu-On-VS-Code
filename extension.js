@@ -6,7 +6,7 @@ const MarkdownItKatex = require('@luogu-dev/markdown-it-katex');
 const cookiessupport = require('axios-cookiejar-support').default;
 const CSRF_TOKEN_REGEX = /<meta name="csrf-token" content="(.*)">/
 const md=MarkdownIt();
-var base64='';
+var base64='',islogin=false;
 md.use(MarkdownItKatex);//Markdown-it-Latex无法使用
 function jsonarraylength(jsonarray) {
 	var jsonlen=0;
@@ -56,7 +56,7 @@ function apireturn() {
 		defaults.transformRequest=[defaults.transformRequest];
 	}
 	defaults.transformRequest.push((data,headers)=>{
-		headers['User-Agent']='Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.130 Safari/537.36 LVSC/1.1.2';
+		headers['User-Agent']='Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/82.0.4077.0 Safari/537.36 LVSC/1.1.5';//模拟浏览器UA，防止洛谷服务器不认，拒绝服务。
 		return data;
 	});
 	return cookiessupport(axios);
@@ -78,14 +78,14 @@ async function GetCaptcha(){
 	base64=data.data.toString("base64");
 	console.log(base64);
 }
-var token='';
+var token='',StatusBar=null;
 /**
  * @param {vscode.ExtensionContext} context
  */
 function activate(context) {
 	console.log('ACTIVE');
 	let disposable = vscode.commands.registerCommand('extension.About', function () {
-		vscode.window.showInformationMessage('LVSC Version 1.0.0 Beta');//关于我们
+		vscode.window.showInformationMessage('LVSC Version 1.1.5');//关于我们
 	});
 	context.subscriptions.push(disposable);
 	disposable = vscode.commands.registerCommand('extension.WatchProblem', async function () {
@@ -134,7 +134,7 @@ function activate(context) {
 				Hint='无题目提示';
 			}
 			else{
-				miaoshu=json.data.data.Hint;
+				Hint=json.data.data.Hint;
 			}
 			console.log(sample);
 			const HTML=`
@@ -266,6 +266,12 @@ function activate(context) {
 		console.log(loginreturn);
 		if(loginreturn){
 			vscode.window.showInformationMessage('Login Successfully!');
+			if(StatusBar===null){
+				StatusBar=vscode.window.createStatusBarItem();
+			}
+			StatusBar.text='You are logged in to Luogu';
+			StatusBar.show();
+			islogin=true;
 		}
 	});
 	context.subscriptions.push(disposable);
@@ -294,6 +300,51 @@ function activate(context) {
 		}
 		else{
 			vscode.window.showInformationMessage('Get Fate Successfully!');
+		}
+	});
+	context.subscriptions.push(disposable);
+	disposable = vscode.commands.registerCommand('extension.Logout',async function () {
+		if(StatusBar===null){
+			StatusBar=vscode.window.createStatusBarItem();
+			StatusBar.text='You are logged out to Luogu';
+			StatusBar.show();
+			return;
+		}
+		if(!islogin){
+			StatusBar.text='You are logged out to Luogu';
+			StatusBar.show();
+			return;
+		}
+		var uid;
+		cookiejar.getCookies('https://www.luogu.com.cn',
+			function returndata(err,cookie) {
+				console.log(err);
+				console.log(cookie);
+				if(err===null){
+					var data=cookie.find((cookie)=>cookie.key==='_uid');
+					console.log(data);
+					console.log(data.value);
+					uid=data.value;
+				}
+			}
+		);
+		const logoutdata=await APILOAD.get('https://www.luogu.com.cn/api/auth/logout?uid='+String(uid),
+		{
+			jar: cookiejar
+		}).then(
+			function returnMSG(MSG) {
+				return MSG;
+			}
+		);
+		console.log(logoutdata);
+		if(logoutdata.status==200){
+			vscode.window.showInformationMessage('Logout Successfully!');
+			StatusBar.text='You are logged out to Luogu';
+			StatusBar.show();
+			islogin=false;
+		}
+		else{
+			vscode.window.showErrorMessage('Error, Error Code:'+String(logoutdata.status));
 		}
 	});
 	context.subscriptions.push(disposable);

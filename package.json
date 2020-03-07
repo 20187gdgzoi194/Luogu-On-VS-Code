@@ -2,7 +2,7 @@
 	"name": "luogu",
 	"displayName": "Luogu on VS Code",
 	"description": "An extension for Luogu on VS Code.",
-	"version": "1.1.2",
+	"version": "1.1.5",
 	"publisher": "chuangzhi",
 	"engines": {
 		"vscode": "^1.42.0"
@@ -36,7 +36,9 @@
 		"onCommand:extension.About",
 		"onCommand:extension.WatchProblem",
 		"onCommand:extension.Login",
-		"onCommand:extension.Fate"
+		"onCommand:extension.Fate",
+		"onCommand:extension.Logout"
+
 	],
 	"main": "./extension.js",
 	"contributes": {
@@ -56,6 +58,10 @@
 			{
 				"command": "extension.Fate",
 				"title": "Luogu: Fate"
+			},
+			{
+				"command": "extension.Logout",
+				"title": "Luogu: Logout"
 			}
 		],
 		"keybindings": [
@@ -74,6 +80,12 @@
 			{
 				"command": "extension.Fate",
 				"key": "Ctrl+Alt+F"
+			},
+			{
+				
+				"command": "extension.Logout",
+				"key": "Ctrl+Alt+O"
+				
 			}
 		]
 	},
