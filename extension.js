@@ -56,7 +56,7 @@ function apireturn() {
 		defaults.transformRequest=[defaults.transformRequest];
 	}
 	defaults.transformRequest.push((data,headers)=>{
-		headers['User-Agent']='Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/82.0.4077.0 Safari/537.36 LVSC/1.1.5';//模拟浏览器UA，防止洛谷服务器不认，拒绝服务。
+		headers['User-Agent']='Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/82.0.4077.0 Safari/537.36 LVSC/1.2.5';//模拟浏览器UA，防止洛谷服务器不认，拒绝服务。
 		return data;
 	});
 	return cookiessupport(axios);
@@ -85,7 +85,7 @@ var token='',StatusBar=null;
 function activate(context) {
 	console.log('ACTIVE');
 	let disposable = vscode.commands.registerCommand('extension.About', function () {
-		vscode.window.showInformationMessage('LVSC Version 1.1.5');//关于我们
+		vscode.window.showInformationMessage('LVSC Version 1.2.5');//关于我们
 	});
 	context.subscriptions.push(disposable);
 	disposable = vscode.commands.registerCommand('extension.WatchProblem', async function () {
@@ -102,6 +102,7 @@ function activate(context) {
 			return;//用户没有输入
 		}
 		console.log('PID:'+PID);
+		console.log(test);
 		const json=await APILOAD.get('api/problem/detail/'+PID).then(
 			function returnJSON(MSG) {
 				return MSG;
@@ -346,6 +347,42 @@ function activate(context) {
 		else{
 			vscode.window.showErrorMessage('Error, Error Code:'+String(logoutdata.status));
 		}
+	});
+	context.subscriptions.push(disposable);
+	disposable = vscode.commands.registerCommand('extension.PostBenBen',async function () {
+		if(!islogin){
+			vscode.window.showInformationMessage('Please Login First!');
+			return;
+		}
+		let benben=await vscode.window.showInputBox({
+			ignoreFocusOut: true,
+			placeHolder: '输入你的犇犇'
+		}).then(
+			function returnMSG(MSG){
+				return MSG;
+			}
+		);
+		console.log(benben);
+		token=await APILOAD.get('',{jar: cookiejar}).then(
+			function getheader(MSG){
+				const returndata=CSRF_TOKEN_REGEX.exec(MSG.data);
+				return returndata ? returndata[1].trim() : null
+			}
+		);
+		let postdata=await APILOAD.post('/api/feed/postBenben',{
+			benben
+		},{
+			headers:{
+				'X-CSRF-Token': token,
+				'Referer': 'https://www.luogu.com.cn/'
+			},
+			jar: cookiejar
+		}).then(
+			function returnMSG(MSG){
+				return MSG;
+			}
+		);
+		console.log(postdata);
 	});
 	context.subscriptions.push(disposable);
 }

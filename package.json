@@ -2,20 +2,20 @@
 	"name": "luogu",
 	"displayName": "Luogu on VS Code",
 	"description": "An extension for Luogu on VS Code.",
-	"version": "1.1.5",
+	"version": "1.2.5",
 	"publisher": "chuangzhi",
 	"engines": {
 		"vscode": "^1.42.0"
 	},
 	"repository": {
 		"type": "git",
-		"url": "https://gitee.com/chuangzhi-programming-studio/LVSC"
+		"url": "https://gitlab.com/ChuangzhiProgrammingStudio/LVSC"
 	},
 	"icon": "luogu-normal.png",
-	"homepage": "https://gitee.com/chuangzhi-programming-studio/LVSC",
+	"homepage": "https://gitlab.com/ChuangzhiProgrammingStudio/LVSC",
 	"license": "MIT",
 	"bugs": {
-		"url": "https://gitee.com/chuangzhi-programming-studio/LVSC/issues",
+		"url": "https://gitlab.com/ChuangzhiProgrammingStudio/LVSC/issues",
 		"email": "chuangzhi080317@gmail.com"
 	},
 	"categories": [
