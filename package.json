@@ -2,7 +2,7 @@
 	"name": "luogu",
 	"displayName": "Luogu on VS Code",
 	"description": "An extension for Luogu on VS Code.",
-	"version": "1.2.5",
+	"version": "1.2.7",
 	"publisher": "chuangzhi",
 	"engines": {
 		"vscode": "^1.42.0"
@@ -38,7 +38,8 @@
 		"onCommand:extension.Login",
 		"onCommand:extension.Fate",
 		"onCommand:extension.Logout",
-		"onCommand:extension.PostBenBen"
+		"onCommand:extension.PostBenBen",
+		"onCommand:extension.WatchBenBen"
 
 	],
 	"main": "./extension.js",
@@ -67,6 +68,10 @@
 			{
 				"command": "extension.PostBenBen",
 				"title": "Luogu: Post BenBen"
+			},
+			{
+				"command": "extension.WatchBenBen",
+				"title": "Luogu: Watch BenBen"
 			}
 		],
 		"keybindings": [
@@ -95,6 +100,11 @@
 				
 				"command": "extension.PostBenBen",
 				"key": "Ctrl+Alt+P"
+			},
+			{
+				
+				"command": "extension.WatchBenBen",
+				"key": "Ctrl+Alt+Q"
 			}
 		]
 	},
