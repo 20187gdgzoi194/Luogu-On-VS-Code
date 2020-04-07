@@ -82,6 +82,55 @@ var token='',StatusBar=null;
 /**
  * @param {vscode.ExtensionContext} context
  */
+async function GetNowBenBen(){
+	let apireturn=await APILOAD.get('/feed/all?page=1',{
+		jar: cookiejar
+	}).then(function(MSG){
+		return MSG;
+	});
+	console.log(apireturn);
+	let html=`
+	<html>
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<title>犇犇</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+		<meta name="renderer" content="webkit">
+		<meta name="csrf-token" content="1586249278:GgZXfm811YSzc3XH4HTrIVeKBSLw2ash9AcUb8nPeXw=">
+				<meta name="keywords" content="洛谷,洛谷Online judge,noip,noi,信息学,信息学竞赛,acm,竞赛,onlineJudge,洛谷Onlinejudge,信息学学习" />
+	<meta name="description" content="洛谷创办于2013年，致力于为参加noip、noi、acm的选手提供清爽、快捷的编程体验。它拥有在线测题系统、强大的社区、在线学习功能。很多教程内容由各位oiers提供的，内容广泛。无论是初学oi的蒟蒻，还是久经沙场的神犇，均可从中获益，也可以帮助他人，共同进步。是学习noip等竞赛时理想的网站。" />
+			<link rel="stylesheet" href="https://cdn.luogu.com.cn/css/amazeui.min.css"/>
+		<link rel="stylesheet" href="https://cdn.luogu.com.cn/css/katex.min.css"/>
+		<link rel="stylesheet" href="https://cdn.luogu.com.cn/css/luogu3.css?ver=20190102">
+		<link rel="stylesheet" href="https://cdn.luogu.com.cn/css/highlight_tomorrow.css">
+		<link rel="stylesheet" href="https://cdn.luogu.com.cn/markdown-palettes/markdown-palettes.css?ver=20190219">
+		<script src="https://cdn.luogu.com.cn/js/jquery-2.1.1.min.js"></script>
+		<script src="https://cdn.luogu.com.cn/js/luogu3_pre.js?ver=20190101"></script>
+		<link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" media="screen"/>
+		<link rel="stylesheet" href="https://cdn.luogu.com.cn/fe/loader.css?ver=20200331-2">
+		<script>window._feInjection = JSON.parse(decodeURIComponent("%7B%22code%22%3A200%2C%22currentUser%22%3A%7B%22blogAddress%22%3Anull%2C%22followingCount%22%3A0%2C%22followerCount%22%3A5%2C%22ranking%22%3A27265%2C%22unreadMessageCount%22%3A0%2C%22unreadNoticeCount%22%3A0%2C%22verified%22%3Atrue%2C%22uid%22%3A333163%2C%22name%22%3A%22chuangzhi%22%2C%22slogan%22%3A%22%22%2C%22badge%22%3Anull%2C%22isAdmin%22%3Afalse%2C%22isBanned%22%3Afalse%2C%22color%22%3A%22Blue%22%2C%22ccfLevel%22%3A0%7D%2C%22currentTemplate%22%3A%22Excited%22%2C%22currentData%22%3A%7B%22shortHeader%22%3Atrue%2C%22pageName%22%3A%22%5Cu6d1b%5Cu8c37%22%2C%22title%22%3A%22%5Cu9996%5Cu9875%22%7D%2C%22currentTheme%22%3A%7B%22id%22%3A25337%2C%22header%22%3A%7B%22imagePath%22%3A%22https%3A%5C%2F%5C%2Fi.loli.net%5C%2F2019%5C%2F08%5C%2F01%5C%2F5d42f4ae15b0082744.png%22%2C%22color%22%3A%5B%5B244%2C90%2C141%2C1%5D%5D%2C%22blur%22%3A0%2C%22brightness%22%3A0%2C%22degree%22%3A108%2C%22repeat%22%3A0%2C%22position%22%3A%5B10%2C50%5D%2C%22size%22%3A%5B-1%2C-1%5D%2C%22type%22%3A1%2C%22__CLASS_NAME%22%3A%22Luogu%5C%5CDataClass%5C%5CUser%5C%5CThemeConfig%5C%5CHeaderFooterConfig%22%7D%2C%22sideNav%22%3A%7B%22logoBackgroundColor%22%3A%5B244%2C90%2C141%2C1%5D%2C%22color%22%3A%5B244%2C90%2C141%2C1%5D%2C%22invertColor%22%3Atrue%2C%22__CLASS_NAME%22%3A%22Luogu%5C%5CDataClass%5C%5CUser%5C%5CThemeConfig%5C%5CSideNavConfig%22%7D%2C%22footer%22%3A%7B%22imagePath%22%3A%22https%3A%5C%2F%5C%2Fi.loli.net%5C%2F2019%5C%2F08%5C%2F01%5C%2F5d42f4ae15b0082744.png%22%2C%22color%22%3A%5B%5B244%2C90%2C141%2C1%5D%5D%2C%22blur%22%3A0%2C%22brightness%22%3A-41%2C%22degree%22%3A0%2C%22repeat%22%3A0%2C%22position%22%3A%5B90%2C50%5D%2C%22size%22%3A%5B-1%2C-1%5D%2C%22type%22%3A1%2C%22__CLASS_NAME%22%3A%22Luogu%5C%5CDataClass%5C%5CUser%5C%5CThemeConfig%5C%5CHeaderFooterConfig%22%7D%7D%7D"));window._feConfigVersion=1585662696;</script>
+		<script>window._release = '20200331-2';</script>
+		<script src="https://cdn.luogu.com.cn/fe/loader.js?ver=20200331-2" charset="utf-8" defer></script>
+		<style type="text/css">
+			list-style:none;
+			list-style-type:none;
+		</style>
+	</head>
+	<body>
+		${apireturn.data}
+	</body>
+	</html>		
+	`;//使用洛谷原生head标签，待解决问题：犇犇前面有很神奇的点
+	console.log(html);
+	const panel=vscode.window.createWebviewPanel('犇犇','犇犇',
+		vscode.ViewColumn.Two,{
+			enableScripts: true,
+			retainContextWhenHidden: true,
+			preserveFocus: true
+		});
+		panel.webview.html=html;
+}
 function activate(context) {
 	console.log('ACTIVE');
 	let disposable = vscode.commands.registerCommand('extension.About', function () {
@@ -369,9 +418,8 @@ function activate(context) {
 				return returndata ? returndata[1].trim() : null
 			}
 		);
-		let postdata=await APILOAD.post('/api/feed/postBenben',{
-			benben
-		},{
+		benben="content="+benben;
+		let postdata=await APILOAD.post('/api/feed/postBenben',benben,{
 			headers:{
 				'X-CSRF-Token': token,
 				'Referer': 'https://www.luogu.com.cn/'
@@ -383,6 +431,7 @@ function activate(context) {
 			}
 		);
 		console.log(postdata);
+		GetNowBenBen();
 	});
 	context.subscriptions.push(disposable);
 }

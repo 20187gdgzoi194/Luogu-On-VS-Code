@@ -37,7 +37,8 @@
 		"onCommand:extension.WatchProblem",
 		"onCommand:extension.Login",
 		"onCommand:extension.Fate",
-		"onCommand:extension.Logout"
+		"onCommand:extension.Logout",
+		"onCommand:extension.PostBenBen"
 
 	],
 	"main": "./extension.js",
@@ -62,6 +63,10 @@
 			{
 				"command": "extension.Logout",
 				"title": "Luogu: Logout"
+			},
+			{
+				"command": "extension.PostBenBen",
+				"title": "Luogu: Post BenBen"
 			}
 		],
 		"keybindings": [
@@ -85,7 +90,11 @@
 				
 				"command": "extension.Logout",
 				"key": "Ctrl+Alt+O"
+			},
+			{
 				
+				"command": "extension.PostBenBen",
+				"key": "Ctrl+Alt+P"
 			}
 		]
 	},
