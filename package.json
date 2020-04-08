@@ -2,7 +2,7 @@
 	"name": "luogu",
 	"displayName": "Luogu on VS Code",
 	"description": "An extension for Luogu on VS Code.",
-	"version": "1.2.7",
+	"version": "1.2.9",
 	"publisher": "chuangzhi",
 	"engines": {
 		"vscode": "^1.42.0"

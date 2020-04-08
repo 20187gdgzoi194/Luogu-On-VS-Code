@@ -7,7 +7,7 @@ const cookiessupport = require('axios-cookiejar-support').default;
 const CSRF_TOKEN_REGEX = /<meta name="csrf-token" content="(.*)">/
 const md=MarkdownIt();
 var base64='',islogin=false;
-const UA='Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/82.0.4077.0 Safari/537.36 LVSC/1.2.7';//模拟浏览器UA，防止洛谷服务器不认，拒绝服务。
+const UA='Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/82.0.4077.0 Safari/537.36 LVSC/1.2.9';//模拟浏览器UA，防止洛谷服务器不认，拒绝服务。
 md.use(MarkdownItKatex);//Markdown-it-Latex无法使用
 function jsonarraylength(jsonarray) {
 	var jsonlen=0;
@@ -135,7 +135,7 @@ async function GetNowBenBen(){
 function activate(context) {
 	console.log('ACTIVE');
 	let disposable = vscode.commands.registerCommand('extension.About', function () {
-		vscode.window.showInformationMessage('LVSC Version 1.2.7');//关于我们
+		vscode.window.showInformationMessage('LVSC Version 1.2.9');//关于我们
 	});
 	context.subscriptions.push(disposable);
 	disposable = vscode.commands.registerCommand('extension.WatchProblem', async function () {
@@ -152,7 +152,6 @@ function activate(context) {
 			return;//用户没有输入
 		}
 		console.log('PID:'+PID);
-		console.log(test);
 		const json=await APILOAD.get('api/problem/detail/'+PID).then(
 			function returnJSON(MSG) {
 				return MSG;
