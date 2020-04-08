@@ -7,7 +7,7 @@ const cookiessupport = require('axios-cookiejar-support').default;
 const CSRF_TOKEN_REGEX = /<meta name="csrf-token" content="(.*)">/
 const md=MarkdownIt();
 var base64='',islogin=false;
-const UA='Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/82.0.4077.0 Safari/537.36 LVSC/1.2.9';//模拟浏览器UA，防止洛谷服务器不认，拒绝服务。
+const UA='Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/82.0.4077.0 Safari/537.36 LVSC/1.3.2';//模拟浏览器UA，防止洛谷服务器不认，拒绝服务。
 md.use(MarkdownItKatex);//Markdown-it-Latex无法使用
 function jsonarraylength(jsonarray) {
 	var jsonlen=0;
@@ -135,7 +135,7 @@ async function GetNowBenBen(){
 function activate(context) {
 	console.log('ACTIVE');
 	let disposable = vscode.commands.registerCommand('extension.About', function () {
-		vscode.window.showInformationMessage('LVSC Version 1.2.9');//关于我们
+		vscode.window.showInformationMessage('LVSC Version 1.3.2');//关于我们
 	});
 	context.subscriptions.push(disposable);
 	disposable = vscode.commands.registerCommand('extension.WatchProblem', async function () {
@@ -431,6 +431,12 @@ function activate(context) {
 			}
 		);
 		console.log(postdata);
+		if(postdata.data.status!=200){
+			vscode.window.showErrorMessage('发送失败，请检查犇犇是否为空或被禁言！');
+			return;
+		}else{
+			vscode.window.showInformationMessage('发送成功！');
+		}
 		GetNowBenBen();
 	});
 	context.subscriptions.push(disposable);
