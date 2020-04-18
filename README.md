@@ -1,6 +1,6 @@
 # LVSC(Luogu On VS Code)
 
-![](https://img.shields.io/badge/Version-1.2.9-green.svg) 
+![](https://img.shields.io/badge/Version-1.3.2-green.svg) 
 
 这款扩展能够使你在VS Code中真正实现看题、交题、打卡等等一键操作，与洛谷无缝对接，体验本地化洛谷的完美体验！
 
