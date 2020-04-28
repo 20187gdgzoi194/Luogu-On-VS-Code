@@ -52,7 +52,7 @@
 说明验证码、密码可能错了，或者没有这个用户。
 
 ## Bug反馈
-[请在这里提Issues](https://gitlab.com/ChuangzhiProgrammingStudio/LVSC/issues)
+[请在这里提Issues](https://github.com/chuang-zhi/Luogu-On-VS-Code/issues)
 
 ## 更多功能
 敬请期待哦qwq
