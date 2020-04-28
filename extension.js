@@ -7,7 +7,7 @@ const cookiessupport = require('axios-cookiejar-support').default;
 const CSRF_TOKEN_REGEX = /<meta name="csrf-token" content="(.*)">/
 const md=MarkdownIt();
 var base64='',islogin=false;
-const UA='Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/82.0.4077.0 Safari/537.36 LVSC/1.3.2';//模拟浏览器UA，防止洛谷服务器不认，拒绝服务。
+const UA='Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/82.0.4077.0 Safari/537.36 LVSC/1.3.5';//模拟浏览器UA，防止洛谷服务器不认，拒绝服务。
 md.use(MarkdownItKatex);//Markdown-it-Latex无法使用
 function jsonarraylength(jsonarray) {
 	var jsonlen=0;

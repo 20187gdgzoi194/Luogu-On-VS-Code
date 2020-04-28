@@ -23,3 +23,6 @@
 
 ## Version 1.3.2
 优化使用体验。
+
+## Version 1.3.5
+迁移代码至Github。

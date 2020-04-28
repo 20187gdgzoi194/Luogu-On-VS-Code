@@ -2,21 +2,21 @@
 	"name": "luogu",
 	"displayName": "Luogu on VS Code",
 	"description": "An extension for Luogu on VS Code.",
-	"version": "1.3.2",
+	"version": "1.3.5",
 	"publisher": "Coderhub",
 	"engines": {
 		"vscode": "^1.42.0"
 	},
 	"repository": {
 		"type": "git",
-		"url": "https://gitlab.com/ChuangzhiProgrammingStudio/LVSC"
+		"url": "https://github.com/chuang-zhi/Luogu-On-VS-Code"
 	},
 	"icon": "luogu-normal.png",
-	"homepage": "https://gitlab.com/ChuangzhiProgrammingStudio/LVSC",
+	"homepage": "https://github.com/chuang-zhi/Luogu-On-VS-Code",
 	"license": "MIT",
 	"bugs": {
-		"url": "https://gitlab.com/ChuangzhiProgrammingStudio/LVSC/issues",
-		"email": "chuangzhi080317@gmail.com"
+		"url": "https://github.com/chuang-zhi/Luogu-On-VS-Code/issues",
+		"email": "2869237730@qq.com"
 	},
 	"categories": [
 		"Other",
