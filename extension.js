@@ -7,7 +7,7 @@ const cookiessupport = require('axios-cookiejar-support').default;
 const CSRF_TOKEN_REGEX = /<meta name="csrf-token" content="(.*)">/
 const md=MarkdownIt();
 var base64='',islogin=false;
-const UA='Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/82.0.4077.0 Safari/537.36 LVSC/1.3.5';//模拟浏览器UA，防止洛谷服务器不认，拒绝服务。
+const UA='Luogu On VS Code/1.3.9';//刚一把了……
 md.use(MarkdownItKatex);//Markdown-it-Latex无法使用
 function jsonarraylength(jsonarray) {
 	var jsonlen=0;
@@ -132,10 +132,85 @@ async function GetNowBenBen(){
 		});
 		panel.webview.html=html;
 }
+function GetCode(code_json,lines){
+	var code='';
+	for(var i=0;i<lines;i++){
+		code+=code_json[i]+'\n';
+	}
+	return code;
+}
 function activate(context) {
 	console.log('ACTIVE');
 	let disposable = vscode.commands.registerCommand('extension.About', function () {
-		vscode.window.showInformationMessage('LVSC Version 1.3.2');//关于我们
+		vscode.window.showInformationMessage('LVSC Version 1.3.9');//关于我们
+	});
+	context.subscriptions.push(disposable);
+	disposable = vscode.commands.registerCommand('extension.SubmitProblem', async function () {
+		var PID=await vscode.window.showInputBox({
+			placeHolder: 'Input the Problem ID',
+			ignoreFocusOut: true
+		}).then(function returnMSG(MSG){return MSG;});//读取题号
+		console.log(PID);
+		console.log(vscode.window.activeTextEditor);
+		var editor=vscode.window.activeTextEditor;
+		var code_json=editor._documentData._lines;
+		var lines=jsonarraylength(code_json);
+		console.log(lines);
+		var code=GetCode(code_json,lines);//将一行行的代码组合为字符串
+		console.log(code);
+		//大型数组init现场……
+		var lang=new Array("Auto","Pascal","C","C++","C++11","提交答案","Python 2","Python 3","Java 8","Node 8.9",
+							"请勿选择此项（没有编号为10的语言）","C++14","C++17","Ruby","Go","Rust","PHP 7","C# Mono","Visual Basic Mono",
+							"Haskell","Kotlin/Native","Kotlin/JVM","Scala","Prel","PyPy 2","PyPy 3","WenYan-Lang");
+		var lang_choose=await vscode.window.showQuickPick(lang,{
+			canPickMany: false,
+			ignoreFocusOut: true,
+			placeHolder: '选择语言'
+		}).then(function returnlang(lang_id){
+			for(var i=0;i<lang.length;i++){
+				if(lang[i]==lang_id){
+					if(i==10){//编号为10的语言被ltt和3k吃掉了，返回413
+						vscode.window.showInformationMessage('作者严重怀疑你是个线性筛……自动提交为Auto！');
+						return 0;//Auto的对应编号
+					}
+					return i;//如果匹配则返回对应的答案
+				}
+			}
+		});	
+		var O2=await vscode.window.showQuickPick(['开启','关闭'],{
+			canPickMany: false,
+			ignoreFocusOut: true,
+			placeHolder: '开启O2？（非C/C++/Pascal请勿开启！）'
+		}).then(
+			function returnmsg(msg){
+				if(msg=='开启')return 1;
+				else return 0;
+			}
+		)
+		console.log(lang_choose);//选择语言以及是否打开O2	
+		token=await APILOAD.get('',{jar: cookiejar}).then(
+			function getheader(MSG){
+				const returndata=CSRF_TOKEN_REGEX.exec(MSG.data);
+				return returndata ? returndata[1].trim() : null
+			}
+		);//获取X-CSRF-Token，否则无法进行POST操作
+		const Submit=await APILOAD.post('/fe/api/problem/submit/'+PID,{
+			code: code,
+			enableO2: O2,
+			lang: lang_choose
+		},{
+			jar: cookiejar,
+			headers: {
+				'X-CSRF-Token': token,
+				'Referer': 'https://www.luogu.com.cn/problem/'+PID,
+			}
+		}).then(function returnmsg(msg){
+			return msg;
+		});//POST上去，拿返回值
+		console.log(Submit);
+		if(Submit.status==200){
+			vscode.window.showInformationMessage('Your Record ID is :'+Submit.data.rid);//输出本次提交的RID
+		}
 	});
 	context.subscriptions.push(disposable);
 	disposable = vscode.commands.registerCommand('extension.WatchProblem', async function () {
